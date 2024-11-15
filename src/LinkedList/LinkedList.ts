@@ -88,9 +88,9 @@ export class LinkedList<T> {
   }
 
   // 删除
-  removeAt(position: number): T | undefined {
+  removeAt(position: number): T | null {
     if (position < 0 || position >= this.size) {
-      return undefined;
+      return null;
     }
     let current = this.head;
     if (position === 0) {
@@ -102,7 +102,7 @@ export class LinkedList<T> {
 
     this.size--;
 
-    return current?.value;
+    return current?.value ?? null;
   }
 
   // get
@@ -112,6 +112,48 @@ export class LinkedList<T> {
     }
 
     return this.getNode(position)?.value ?? null;
+  }
+
+  // update
+  update(element: T, position: number) {
+    if (position < 0 || position >= this.size) {
+      return false;
+    }
+
+    const current = this.getNode(position);
+    current!.value = element;
+    return true;
+  }
+
+  // indexOf 根据元素获取索引
+  indexOf(value: T): number {
+    let index = 0;
+    let current: Node<T> | null = this.head;
+    // while (index < this.size - 1) {
+    //   if (current?.value == value) {
+    //     return index;
+    //   }
+
+    //   current = current?.next ?? null;
+    //   index++;
+    // }
+
+    while (current) {
+      if (current.value === value) {
+        return index;
+      }
+      current = current.next;
+      index++;
+    }
+
+    return -1;
+  }
+
+  // remove
+  remove(value: T): T | null {
+    const index = this.indexOf(value);
+    if (index === -1) return null;
+    return this.removeAt(index);
   }
 
   // 遍历链表的方法
@@ -151,3 +193,13 @@ link.traverse();
 console.log("link.get(0)", link.get(0));
 // console.log("link.get(1)", link.get(1));
 // console.log("link.get(2)", link.get(2));
+
+link.update("111", 0);
+link.traverse();
+
+console.log('link.indexOf("bbb")', link.indexOf("bbb"));
+console.log('link.indexOf("111")', link.indexOf("111"));
+console.log('link.indexOf("xxx")', link.indexOf("xxx"));
+link.remove("ddd");
+link.remove("111");
+link.traverse();
