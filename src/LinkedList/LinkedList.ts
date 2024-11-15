@@ -102,6 +102,29 @@ export class LinkedList<T> {
     return true;
   }
 
+  // 删除
+  removeAt(position: number): T | undefined {
+    if (position < 0 || position >= this.size) {
+      return undefined;
+    }
+    let current = this.head;
+    if (position === 0) {
+      this.head = current?.next ?? null;
+    } else {
+      let prevNode: Node<T> | null = null;
+      let i = 0;
+      while (i++ < position && current) {
+        prevNode = current;
+        current = current?.next;
+      }
+      prevNode!.next = current?.next ?? null;
+    }
+
+    this.size--;
+
+    return current?.value;
+  }
+
   // 遍历链表的方法
   traverse() {
     let p = this.head;
@@ -128,4 +151,10 @@ link.insert("abc", 0);
 link.traverse();
 link.insert("bab", 3);
 link.insert("nba", 6);
+link.traverse();
+link.removeAt(0);
+link.traverse();
+link.removeAt(2);
+link.traverse();
+link.removeAt(4);
 link.traverse();
