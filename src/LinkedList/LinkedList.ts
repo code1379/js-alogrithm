@@ -28,7 +28,17 @@ interface ILink {}
 export class LinkedList<T> {
   private head: Node<T> | null = null;
   private size: number = 0;
+  // 根据 position 获取到当前节点Node
+  private getNode(position: number): Node<T> | null {
+    let index = 0;
+    let current = this.head;
 
+    while (index++ < position && current) {
+      current = current.next;
+    }
+
+    return current;
+  }
   // 追加节点
   append(val: T) {
     // 创建新节点
@@ -67,35 +77,10 @@ export class LinkedList<T> {
     } else {
       // 红元老师这里用了双指针
       // 找 current 的时候找到前面的 prevNode
-      let prevNode: Node<T> | null = null;
-      let current = this.head;
-      // 从 0 开始
-      let index = 0;
-      // while (index < position && current) {
-      //   prevNode = current;
-      //   current = current?.next;
-      //   index++;
-      // }
-      //上面的代码可以写为
-      // 怎么理解呢？
-      // index++ 的值 是之前的值， 0 1 2 ，但是如果循环体里面用的话， i 的值已经加 1 了
-      while (index++ < position && current) {
-        prevNode = current;
-        current = current?.next;
-      }
-
+      const prevNode = this.getNode(position - 1);
+      const curret = prevNode?.next;
       prevNode!.next = newNode;
-      newNode.next = current;
-
-      // 我的代码
-      // // 找到前一个节点
-      // let prevNode = this.head;
-      // for (let i = 0; i < position - 1; i++) {
-      //   prevNode = prevNode!.next;
-      // }
-      // const next = prevNode!.next;
-      // prevNode!.next = newNode;
-      // newNode.next = next;
+      newNode.next = curret ?? null;
     }
     this.size++;
 
@@ -111,13 +96,8 @@ export class LinkedList<T> {
     if (position === 0) {
       this.head = current?.next ?? null;
     } else {
-      let prevNode: Node<T> | null = null;
-      let i = 0;
-      while (i++ < position && current) {
-        prevNode = current;
-        current = current?.next;
-      }
-      prevNode!.next = current?.next ?? null;
+      const prevNode: Node<T> | null = this.getNode(position - 1);
+      prevNode!.next = prevNode?.next?.next ?? null;
     }
 
     this.size--;
@@ -131,20 +111,7 @@ export class LinkedList<T> {
       return null;
     }
 
-    // if (position === 0) {
-    //   return this.head?.value ?? null;
-    // }
-    // index 0 所在的位置就是 head
-    let current = this.head;
-    let index = 0;
-
-    // 0 的时候其实是不会进来的，其实还是 head
-    // (0 < 0)
-    while (index++ < position) {
-      current = current?.next || null;
-    }
-
-    return current?.value ?? null;
+    return this.getNode(position)?.value ?? null;
   }
 
   // 遍历链表的方法
