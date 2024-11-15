@@ -125,6 +125,28 @@ export class LinkedList<T> {
     return current?.value;
   }
 
+  // get
+  get(position: number): T | null {
+    if (position < 0 || position >= this.size) {
+      return null;
+    }
+
+    // if (position === 0) {
+    //   return this.head?.value ?? null;
+    // }
+    // index 0 所在的位置就是 head
+    let current = this.head;
+    let index = 0;
+
+    // 0 的时候其实是不会进来的，其实还是 head
+    // (0 < 0)
+    while (index++ < position) {
+      current = current?.next || null;
+    }
+
+    return current?.value ?? null;
+  }
+
   // 遍历链表的方法
   traverse() {
     let p = this.head;
@@ -158,3 +180,7 @@ link.removeAt(2);
 link.traverse();
 link.removeAt(4);
 link.traverse();
+
+console.log("link.get(0)", link.get(0));
+// console.log("link.get(1)", link.get(1));
+// console.log("link.get(2)", link.get(2));
